@@ -4,7 +4,7 @@ const initialGameBoard: (null | string)[][] = [
   [null, null, null],
 ];
 
-interface GameTurn {
+export interface GameTurn {
   square: {
     row: number;
     col: number;
@@ -13,41 +13,22 @@ interface GameTurn {
 }
 
 interface GameBoardProps {
-  turns: GameTurn[];
+  board: (string | null)[][];
   onSelectSquare: (rowIndex: number, colIndex: number) => void;
 }
 
-const GameBoard = ({ onSelectSquare, turns }: GameBoardProps) => {
-  let gameBoard = initialGameBoard.map((row) => [...row]); // Делаем поверхностную копию массива
-  for (const turn of turns) {
-    const { square, player } = turn;
-    const { row, col } = square;
-    gameBoard[row][col] = player; // Обновляем значения ячеек на основе ходов
-  }
-
-  //   const [gameBoard, setGameBoard] =
-  //     useState<(null | string)[][]>(initialGameBoard);
-
-  //   const handleSelectSquare = (rowIndex: number, colIndex: number) => {
-  //     setGameBoard((prevGameBoard) => {
-  //       const updatedBoard = [
-  //         ...prevGameBoard.map((innerArray) => [...innerArray]),
-  //       ];
-  //       updatedBoard[rowIndex][colIndex] = activePlayerSymbol;
-  //       return updatedBoard;
-  //     });
-
-  //     onSelectSquare();
-  //   };
-
+const GameBoard = ({ onSelectSquare, board }: GameBoardProps) => {
   return (
     <ol id="game-board">
-      {gameBoard.map((row, rowIndex) => (
+      {board.map((row, rowIndex) => (
         <li key={rowIndex}>
           <ol>
             {row.map((playerSymbol, colIndex) => (
               <li key={colIndex}>
-                <button onClick={() => onSelectSquare(rowIndex, colIndex)}>
+                <button
+                  onClick={() => onSelectSquare(rowIndex, colIndex)}
+                  disabled={playerSymbol !== null ? true : false}
+                >
                   {playerSymbol}
                 </button>
               </li>
